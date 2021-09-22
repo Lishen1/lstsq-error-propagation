@@ -1,22 +1,14 @@
 from typing import Callable
 from scipy.linalg import block_diag
 import numpy as np
-import matplotlib.pyplot as plt
-from os import listdir
-from os.path import isfile, join
 from numpy.core.function_base import linspace
-from parse import parse
-
-from scipy.ndimage.measurements import label
-import transforms3d as t3d
 from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
-
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import proj3d
+import transforms3d as t3d
 
-
-def confidence_ellipse(cov, ax, n_std=3.0, facecolor='none', **kwargs):
+def confidence_ellipse(cov, mx, my, ax, n_std=3.0, facecolor='none', **kwargs):
 
     pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
     # Using a special case to obtain the eigenvalues of this
@@ -34,16 +26,13 @@ def confidence_ellipse(cov, ax, n_std=3.0, facecolor='none', **kwargs):
     # the squareroot of the variance and multiplying
     # with the given number of standard deviations.
     scale_x = np.sqrt(cov[0, 0]) * n_std
-    mean_x = np.mean(x)
-
-    # calculating the stdandard deviation of y ...
+       # calculating the stdandard deviation of y ...
     scale_y = np.sqrt(cov[1, 1]) * n_std
-    mean_y = np.mean(y)
 
     transf = transforms.Affine2D() \
         .rotate_deg(45) \
         .scale(scale_x, scale_y) \
-        .translate(mean_x, mean_y)
+        .translate(mx, my)
 
     ellipse.set_transform(transf + ax.transData)
     return ax.add_patch(ellipse)
@@ -662,6 +651,6 @@ def exp_3():
     plt.close()
 
 if __name__ == "__main__":
-    # exp_1()
+    exp_1()
     # exp_2()
-    exp_3()
+    # exp_3()
